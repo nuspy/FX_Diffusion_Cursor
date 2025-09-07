@@ -1,0 +1,95 @@
+# Configurazione principale MagicForex (Python 3.12)
+
+app:
+  name: MagicForex
+  version: 0.1.0
+  seed: 1234
+  data_dir: data
+  models_dir: models
+  db_path: data/forex.db
+  alembic_ini: alembic.ini
+
+providers:
+  default: alpha_vantage
+  alpha_vantage:
+    api_key: ${ALPHAVANTAGE_API_KEY:}
+    base_url: https://www.alphavantage.co/query
+    timeout_s: 30
+    max_retries: 5
+    backoff_base_s: 1.2
+  dukascopy:
+    enabled: false
+    api_key: ${DUKASCOPY_API_KEY:}
+    base_url: https://api.dukascopy.com
+    timeout_s: 30
+
+instruments:
+  - symbol: EURUSD
+    timeframes: ["1m", "5m", "15m", "60m", "1d"]
+
+download:
+  intraday_timeframe: "1m"
+  intraday_days: 60
+  daily_years: 20
+  rate_limit_sleep_s: 12
+
+features:
+  resample_rules:
+    "2m": "2T"
+    "3m": "3T"
+    "15m": "15T"
+    "60m": "60T"
+    "1d": "1D"
+  indicators:
+    atr_n: 14
+    macd_nf: 12
+    macd_ns: 26
+    macd_sig: 9
+    rsi_n: 14
+    bb_n: 20
+    bb_k: 2.0
+    keltner_n: 20
+    keltner_m: 2.0
+  standardization:
+    mode: "window"  # window | global
+    window_bars: 5000
+
+training:
+  vae:
+    patch_len: 64
+    stride: 16
+    z_dim: 64
+    hidden_dim: 256
+    beta_anneal_steps: 10000
+  diffusion:
+    num_steps: 20
+    schedule: "cosine"
+    prediction: "v"
+    sampler: "ddim"  # ddim | dpmpp
+  horizons_min: [1, 5, 15, 30, 60]
+  horizons_hours: [2, 4, 6, 12, 24]
+  horizons_days: [1, 2, 3, 5]
+  batch_size: 64
+  lr: 1e-3
+  max_epochs: 5
+
+calibration:
+  alpha: 0.1
+  lambda_decay: 0.001
+  mondrian_by_session: true
+  credibility:
+    a: 2.0
+    b: 1.0
+    c: 1.0
+    d: 1.0
+    kappa: 1.0
+
+api:
+  host: 127.0.0.1
+  port: 8080
+
+gui:
+  polling_ms: 500
+  realtime_default: false
+
+
