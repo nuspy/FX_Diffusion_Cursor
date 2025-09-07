@@ -109,3 +109,19 @@ def validate_candles(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# Optional Dukascopy stub (same I/O contract)
+@dataclass
+class DukascopyService:
+    base_url: str
+    api_key: str | None = None
+    timeout_s: int = 30
+
+    def current_prices(self, symbol: str) -> pd.DataFrame:
+        # Placeholder: to be implemented with real REST client
+        return pd.DataFrame(columns=["ts_utc","open_t","high_t","low_t","close_t","volume_t","symbol","timeframe","resampled"])  # empty
+
+    def historical_prices(self, symbol: str, timeframe: str) -> pd.DataFrame:
+        # Placeholder
+        return pd.DataFrame(columns=["ts_utc","open_t","high_t","low_t","close_t","volume_t","symbol","timeframe","resampled"])  # empty
+
+
